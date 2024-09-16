@@ -18,7 +18,7 @@ env:
   # Set your value
   GAR_LOCATION: us-east1-docker.pkg.dev/neon-fiber-432820-v5/repo-1/
 
-job:
+jobs:
   build-push-artifact:
     runs-on: ubuntu-latest
     steps:
@@ -26,9 +26,9 @@ job:
         uses: "actions/checkout@v3"
 
       - id: "auth"
-          uses: "google-github-actions/auth@v1"
-          with:
-            credentials_json: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
 
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
