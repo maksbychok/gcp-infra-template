@@ -1,0 +1,15 @@
+{
+  "name": "gcp-infra-template",
+  "version": "1.0.0",
+  "description": "## Installing Terraform 1. Download Terraform: — Visit the Terraform download page. — Download the appropriate package for your operating system. 2. Install Terraform: — Windows: — Unzip the downloaded package. — Move the `terraform.exe` file to a directory included in your system’s `PATH`. — macOS and Linux: — Unzip the downloaded package. — Move the `terraform` binary to `/usr/local/bin` or another directory included in your `PATH`. 3. Verify Installation: — Open a terminal or command prompt. — Run `terraform — version` to verify that Terraform is installed correctly.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
