@@ -43,7 +43,11 @@ jobs:
         run: |-
           gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev --quiet
 
-      - name: "Docker auth"
+      - name: "Docker create"
+        run: |-
+          gcloud artifacts repositories describe ${{ env.REPOSITORY }} --location=${{env.GAR_LOCATION}}
+            
+      - name: "Docker create"
         run: |-
           gcloud artifacts repositories create ${{ env.REPOSITORY }} --repository-format=docker \
           --location=${{env.GAR_LOCATION}} --description="Docker repository"
