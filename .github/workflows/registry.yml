@@ -43,11 +43,20 @@ jobs:
         run: |-
           gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev --quiet
 
-      - name: "Docker create"
+      - name: "Docker repository describe"
+        id: "repository_describe"
         run: |-
-          gcloud artifacts repositories describe ${{ env.REPOSITORY }} --location=${{env.GAR_LOCATION}}
-            
+          gcloud artifacts repositories describe ${{ env.REPOSITORY }} --location=${{env.GAR_LOCATION}} >> $GITHUB_OUTPUT
+           
+      - name: "Docker repository describe11"
+        run: |-
+            gcloud artifacts repositories describe dssdssd --location=${{env.GAR_LOCATION}}
+              
+
       - name: "Docker create"
+        run: echo "${{ steps.repository_describe.outputs }}"
+
+      - name: "Echo repository describe"
         run: |-
           gcloud artifacts repositories create ${{ env.REPOSITORY }} --repository-format=docker \
           --location=${{env.GAR_LOCATION}} --description="Docker repository"
