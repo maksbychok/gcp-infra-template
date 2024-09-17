@@ -12,9 +12,7 @@ on:
 
 env:
   # Set your value
-  PROJECT_ID: neon-fiber-432820-v5 
-  # Set your value
-  REGION: us-east1
+  PROJECT_ID: neon-fiber-432820-v5
   # Set your value
   GAR_LOCATION: us-east1
   # Set your value
@@ -43,8 +41,13 @@ jobs:
 
       - name: "Docker auth"
         run: |-
-          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+          gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev --quiet
 
+      - name: "Docker auth"
+        run: |-
+          gcloud artifacts repositories create ${{ env.REPOSITORY }} --repository-format=docker \
+          --location=${{env.GAR_LOCATION}} --description="Docker repository"
+    
       - name: Build image
         run: |-
           docker build --tag "${{env.GAR_LOCATION}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.REPOSITORY}}/${{env.IMAGE}}:${{ github.sha }}" .
