@@ -1,6 +1,6 @@
 module "api_enablement" {
-  source       = "./modules/api_enablement"
-  project_id   = var.GCP_PROJECT_ID
+  source     = "./modules/api_enablement"
+  project_id = var.GCP_PROJECT_ID
   apis = [
     "cloudresourcemanager.googleapis.com",
     "run.googleapis.com",
@@ -20,7 +20,7 @@ module "network" {
   ip_cidr_range = "10.0.0.0/24"
   region        = var.GCP_REGION
 
-  depends_on = [ module.api_enablement ]
+  depends_on = [module.api_enablement]
 }
 
 module "vpc_connector" {
@@ -30,7 +30,7 @@ module "vpc_connector" {
   network        = module.network.network_name
   ip_cidr_range  = "10.8.0.0/28"
 
-  depends_on = [ module.api_enablement, module.network ]
+  depends_on = [module.api_enablement, module.network]
 }
 
 module "instance" {
@@ -40,19 +40,19 @@ module "instance" {
   image         = var.DOCKER_IMAGE
   vpc_connector = module.vpc_connector.self_link
 
-  depends_on = [ module.api_enablement, module.vpc_connector ]
+  depends_on = [module.api_enablement, module.vpc_connector]
 }
 
 module "sql_database" {
-  source                    = "./modules/sql_database"
-  instance_name             = "${var.PROJECT_NAME}-postgres-instance"
-  database_version          = "POSTGRES_16"
-  region                    = var.GCP_REGION
-  database_name             = "${var.PROJECT_NAME}-db"
-  tier                      = "db-f1-micro"
-  database_admin_name       = var.SQL_USER
-  database_admin_password   = var.SQL_PASSWORD 
-  vpc_network               = module.network.network_self_link
+  source                  = "./modules/sql_database"
+  instance_name           = "${var.PROJECT_NAME}-postgres-instance"
+  database_version        = "POSTGRES_16"
+  region                  = var.GCP_REGION
+  database_name           = "${var.PROJECT_NAME}-db"
+  tier                    = "db-f1-micro"
+  database_admin_name     = var.SQL_USER
+  database_admin_password = var.SQL_PASSWORD
+  vpc_network             = module.network.network_self_link
 
-  depends_on = [ module.api_enablement, module.network, module.vpc_connector ]
+  depends_on = [module.api_enablement, module.network, module.vpc_connector]
 }
