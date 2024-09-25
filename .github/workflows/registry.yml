@@ -11,14 +11,13 @@ on:
     branches: ["main"]
 
 env:
-  # Set your value
-  PROJECT_ID: neon-fiber-432820-v5
-  # Set your value
-  GAR_LOCATION: us-east1
-  # Set your value
-  REPOSITORY: neon-fiber-test
-  # Set your value
-  IMAGE: main
+  TF_VAR_GCP_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+  TF_VAR_GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  TF_VAR_GCP_REGION: ${{ vars.GCP_REGION }}
+  TF_VAR_PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+  TF_VAR_SQL_USER: ${{ secrets.SQL_USER }}
+  TF_VAR_SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
+  TF_VAR_DOCKER_IMAGE: "${{ vars.GCP_REGION }}-docker.pkg.dev/${{vars.GCP_PROJECT_ID}}/${{vars.REPOSITORY}}/${{ vars.IMAGE}}:${{ github.sha }}"
 
 jobs:
   build-push-artifact:
@@ -41,22 +40,26 @@ jobs:
 
       - name: "Docker auth"
         run: |-
-          gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev --quiet
+          gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev --quiet
 
       - name: Check for Artifact Repository
         id: check-repo
         run: |
-            if gcloud artifacts repositories list --format="value(name)" | grep -q ${{ env.REPOSITORY }}; then
-              echo "Repository ${{ env.REPOSITORY }} exists."
+            if gcloud artifacts repositories list --format="value(name)" | grep -q ${{ vars.REPOSITORY }}; then
+              echo "Repository ${{ vars.REPOSITORY }} exists."
             else
-              echo "Repository ${{ env.REPOSITORY }} does not exist. Creating it now..."
-              gcloud artifacts repositories create ${{ env.REPOSITORY }} --repository-format=docker --location=${{env.GAR_LOCATION}} --description="Docker repository"
+              echo "Repository ${{ vars.REPOSITORY }} does not exist. Creating it now..."
+              gcloud artifacts repositories create ${{ vars.REPOSITORY }} --repository-format=docker --location=${{vars.GCP_REGION}} --description="Docker repository"
             fi
 
       - name: Build image
         run: |-
-          docker build --tag "${{env.GAR_LOCATION}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.REPOSITORY}}/${{env.IMAGE}}:${{ github.sha }}" .
+          docker build --tag "${{ env.TF_VAR_DOCKER_IMAGE }}" .
 
       - name: Push image
         run: |-
-          docker push "${{env.GAR_LOCATION}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.REPOSITORY}}/${{env.IMAGE}}:${{ github.sha }}"
+          docker push "${{ env.TF_VAR_DOCKER_IMAGE }}"
+      
+      - name: Terraform plan
+        working-directory: ./terraform
+        run: terraform plan -input=false
