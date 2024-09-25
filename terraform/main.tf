@@ -1,6 +1,6 @@
 module "api_enablement" {
   source       = "./modules/api_enablement"
-  project_id   = var.gcp_project_id
+  project_id   = var.GCP_PROJECT_ID
   apis = [
     "cloudresourcemanager.googleapis.com",
     "run.googleapis.com",
@@ -15,18 +15,18 @@ module "api_enablement" {
 
 module "network" {
   source        = "./modules/network"
-  network_name  = "${var.project_name}-private-network"
-  subnet_name   = "${var.project_name}-private-subnetwork"
+  network_name  = "${var.PROJECT_NAME}-private-network"
+  subnet_name   = "${var.PROJECT_NAME}-private-subnetwork"
   ip_cidr_range = "10.0.0.0/24"
-  region        = var.gcp_region
+  region        = var.GCP_REGION
 
   depends_on = [ module.api_enablement ]
 }
 
 module "vpc_connector" {
   source         = "./modules/vpc_connector"
-  connector_name = "${var.project_name}-vpc-connector"
-  region         = var.gcp_region
+  connector_name = "${var.PROJECT_NAME}-vpc-connector"
+  region         = var.GCP_REGION
   network        = module.network.network_name
   ip_cidr_range  = "10.8.0.0/28"
 
@@ -35,9 +35,9 @@ module "vpc_connector" {
 
 module "instance" {
   source        = "./modules/cloud_run"
-  service_name  = "${var.project_name}-server"
-  region        = var.gcp_region
-  image         = "gcr.io/google-samples/hello-app:1.0"
+  service_name  = "${var.PROJECT_NAME}-server"
+  region        = var.GCP_REGION
+  image         = var.DOCKER_IMAGE
   vpc_connector = module.vpc_connector.self_link
 
   depends_on = [ module.api_enablement, module.vpc_connector ]
@@ -45,13 +45,13 @@ module "instance" {
 
 module "sql_database" {
   source                    = "./modules/sql_database"
-  instance_name             = "${var.project_name}-postgres-instance"
+  instance_name             = "${var.PROJECT_NAME}-postgres-instance"
   database_version          = "POSTGRES_16"
-  region                    = var.gcp_region
-  database_name             = "${var.project_name}-db"
+  region                    = var.GCP_REGION
+  database_name             = "${var.PROJECT_NAME}-db"
   tier                      = "db-f1-micro"
-  database_admin_name       = var.sql_user
-  database_admin_password   = var.sql_passpord 
+  database_admin_name       = var.SQL_USER
+  database_admin_password   = var.SQL_PASSWORD 
   vpc_network               = module.network.network_self_link
 
   depends_on = [ module.api_enablement, module.network, module.vpc_connector ]

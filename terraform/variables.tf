@@ -1,6 +1,7 @@
-variable "gcp_key" {}
-variable "gcp_project_id" {}
-variable "gcp_region" {}
-variable "project_name" {default = "read"}
-variable "sql_user" {}
-variable "sql_passpord" {}
+variable "GCP_KEY" {}
+variable "GCP_PROJECT_ID" {}
+variable "GCP_REGION" {}
+variable "PROJECT_NAME" {default = "read"}
+variable "SQL_USER" {}
+variable "SQL_PASSWORD" {}
+variable "DOCKER_IMAGE" {}

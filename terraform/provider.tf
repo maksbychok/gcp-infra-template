@@ -1,13 +1,13 @@
 #GCP provider
 
 provider "google" {
-  credentials   = file(var.gcp_key)
-  project       = var.gcp_project_id
-  region        = var.gcp_region
+  credentials   = var.GCP_KEY
+  project       = var.GCP_PROJECT_ID
+  region        = var.GCP_REGION
 }
 
 provider "google-beta" {
-  credentials   = file(var.gcp_key)
-  project       = var.gcp_project_id
-  region        = var.gcp_region
+  credentials   = var.GCP_KEY
+  project       = var.GCP_PROJECT_ID
+  region        = var.GCP_REGION
 }
