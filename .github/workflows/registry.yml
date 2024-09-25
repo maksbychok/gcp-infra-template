@@ -43,24 +43,16 @@ jobs:
         run: |-
           gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev --quiet
 
-      - name: "Docker repository describe"
-        id: "repository_describe"
-        run: |-
-          gcloud artifacts repositories describe ${{ env.REPOSITORY }} --location=${{env.GAR_LOCATION}} >> $GITHUB_OUTPUT
-           
-      - name: "Docker repository describe11"
-        run: |-
-            gcloud artifacts repositories describe dssdssd --location=${{env.GAR_LOCATION}}
-              
+      - name: Check for Artifact Repository
+        id: check-repo
+        run: |
+            if gcloud artifacts repositories list --format="value(name)" | grep -q ${{ env.REPOSITORY }}; then
+              echo "Repository ${{ env.REPOSITORY }} exists."
+            else
+              echo "Repository ${{ env.REPOSITORY }} does not exist. Creating it now..."
+              gcloud artifacts repositories create ${{ env.REPOSITORY }} --repository-format=docker --location=${{env.GAR_LOCATION}} --description="Docker repository"
+            fi
 
-      - name: "Docker create"
-        run: echo "${{ steps.repository_describe.outputs }}"
-
-      - name: "Echo repository describe"
-        run: |-
-          gcloud artifacts repositories create ${{ env.REPOSITORY }} --repository-format=docker \
-          --location=${{env.GAR_LOCATION}} --description="Docker repository"
-    
       - name: Build image
         run: |-
           docker build --tag "${{env.GAR_LOCATION}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.REPOSITORY}}/${{env.IMAGE}}:${{ github.sha }}" .
