@@ -14,7 +14,6 @@ provider "google-beta" {
 
 terraform {
   backend "gcs" {
-    # credentials = "/Users/maksbychok/work/gcp-infra-template/keys/neon-fiber-432820-v5-2dbf4edc574a.json"
     bucket = "neon_fiber_tf_remote_state_bucket"
     prefix = "terraform/state"
   }

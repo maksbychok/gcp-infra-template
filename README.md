@@ -36,6 +36,7 @@
 6. Set the Service Account Key as an Environment Variable:
 — Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path of the downloaded key file.
 7. Create TF_STATE_BUCKET (link)[https://medium.com/@saeedsaleem.04/mastering-terraform-a-step-by-step-guide-to-setting-up-a-remote-backend-on-google-cloud-platform-59bad67d5ca9]
+8. Set bucket name in ./terraform/provider.tf/terraform/backend/bucket
 
 
 ## Get started
@@ -49,7 +50,6 @@ PROJECT_NAME         = "baser"
 SQL_USER             = "baser-admin"
 SQL_PASSWORD         = "<password>"
 DOCKER_IMAGE         = "us-east1-docker.pkg.dev/neon-fiber-432820-v5/neon-fiber-test/main:83132af090e119897a68505aea044e56444d76cc"
-TF_STATE_BUCKET_NAME = "tf_remote_state_bucket" // Push name from 7.Create TF_STATE_BUCKET 
 ```
 3. How to run with backend "gcs" 
     ```
