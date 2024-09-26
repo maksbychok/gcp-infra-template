@@ -5,3 +5,4 @@ variable "PROJECT_NAME" { default = "read" }
 variable "SQL_USER" {}
 variable "SQL_PASSWORD" {}
 variable "DOCKER_IMAGE" {}
+variable "SA_EMAIL" {}

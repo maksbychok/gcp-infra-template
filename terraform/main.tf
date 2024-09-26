@@ -9,7 +9,8 @@ module "api_enablement" {
     "sqladmin.googleapis.com",
     "compute.googleapis.com",
     "storage.googleapis.com",
-    "servicenetworking.googleapis.com"
+    "servicenetworking.googleapis.com",
+    "secretmanager.googleapis.com"
   ]
 }
 
@@ -33,14 +34,26 @@ module "vpc_connector" {
   depends_on = [module.api_enablement, module.network]
 }
 
+module "secrets" {
+  source     = "./modules/secret_manager"
+  project_id = var.GCP_PROJECT_ID
+  region     = var.GCP_REGION
+
+  secrets = [
+    { name = "MY_SECRET_1", value = "supersecretvalue1" },
+    { name = "MY_SECRET_2", value = "supersecretvalue2" }
+  ]
+  service_account_email = var.SA_EMAIL
+  depends_on            = [module.api_enablement]
+}
 module "instance" {
   source        = "./modules/cloud_run"
   service_name  = "${var.PROJECT_NAME}-server"
   region        = var.GCP_REGION
   image         = var.DOCKER_IMAGE
   vpc_connector = module.vpc_connector.self_link
-
-  depends_on = [module.api_enablement, module.vpc_connector]
+  secrets       = module.secrets.secrets
+  depends_on    = [module.secrets, module.api_enablement, module.vpc_connector]
 }
 
 module "sql_database" {

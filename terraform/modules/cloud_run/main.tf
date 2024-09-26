@@ -3,6 +3,18 @@ resource "google_cloud_run_v2_service" "this" {
   location = var.region
   template {
     containers {
+      dynamic "env" {
+        for_each = var.secrets
+        content {
+          name = env.value.name
+          value_source {
+            secret_key_ref {
+              secret  = env.value.value
+              version = "latest"
+            }
+          }
+        }
+      }
       image = var.image
       ports {
         container_port = 3000
