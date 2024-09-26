@@ -89,7 +89,7 @@ jobs:
         run: GOOGLE_CREDENTIALS="gcp-sa-key.json" terraform plan -input=false
 
       # Generates an execution plan for Terraform
-      - name: Terraform plan
+      - name: Terraform apply
         working-directory: ./terraform
-        run: GOOGLE_CREDENTIALS="gcp-sa-key.json" terraform apply -input=false
+        run: GOOGLE_CREDENTIALS="gcp-sa-key.json" terraform apply -auto-approve -input=false
       
