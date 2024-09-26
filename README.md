@@ -35,14 +35,23 @@
 — Choose `JSON` and click `Create`. The key file will be downloaded to your machine.
 6. Set the Service Account Key as an Environment Variable:
 — Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path of the downloaded key file.
+7. Create TF_STATE_BUCKET (link)[https://medium.com/@saeedsaleem.04/mastering-terraform-a-step-by-step-guide-to-setting-up-a-remote-backend-on-google-cloud-platform-59bad67d5ca9]
+
 
 ## Get started
 1. Upload Service Account Key to /keys folder (have to be secret)
 2. Create `/terraform/terraform.tfvars` file
 ```
-    gcp_key = "<path_to_service_key>"
-    gcp_project_id = "<id>"
-    gcp_region = "us-east1"
-    sql_user = "sql_admin"
-    sql_passpord = "<password>"
+GCP_KEY              = <<EOT <key> EOT
+GCP_PROJECT_ID       = "neon-fiber-432820-v5"
+GCP_REGION           = "us-east1"
+PROJECT_NAME         = "baser"
+SQL_USER             = "baser-admin"
+SQL_PASSWORD         = "<password>"
+DOCKER_IMAGE         = "us-east1-docker.pkg.dev/neon-fiber-432820-v5/neon-fiber-test/main:83132af090e119897a68505aea044e56444d76cc"
+TF_STATE_BUCKET_NAME = "tf_remote_state_bucket" // Push name from 7.Create TF_STATE_BUCKET 
 ```
+3. How to run with backend "gcs" 
+    ```
+        GOOGLE_CREDENTIALS="<path_to_gcp_key_file>" terraform init -migrate-state
+    ```

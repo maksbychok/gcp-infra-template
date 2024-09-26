@@ -2,20 +2,22 @@ resource "google_cloud_run_v2_service" "this" {
   name     = var.service_name
   location = var.region
   template {
-      containers {
-        image = var.image
-
-        resources {
-          limits = {
-            cpu    = "1"
-            memory = "512Mi"
-          }
+    containers {
+      image = var.image
+      ports {
+        container_port = 3000
+      }
+      resources {
+        limits = {
+          cpu    = "1"
+          memory = "512Mi"
         }
       }
-      vpc_access {
-        connector = var.vpc_connector
-        egress    = "ALL_TRAFFIC" 
-      }
+    }
+    vpc_access {
+      connector = var.vpc_connector
+      egress    = "ALL_TRAFFIC"
+    }
   }
 
   traffic {
