@@ -42,7 +42,8 @@ module "secrets" {
   secrets = [
     { name = "MY_SECRET_1", value = "supersecretvalue1" },
     { name = "MY_SECRET_2", value = "supersecretvalue2" },
-    { name = "MY_SECRET_3", value = "supersecretvalue3" }
+    { name = "MY_SECRET_3", value = "supersecretvalue3" },
+    { name = "LAST_TEST", value = "last test var" }
   ]
   service_account_email = var.SA_EMAIL
   depends_on            = [module.api_enablement]
