@@ -10,7 +10,11 @@ module "api_enablement" {
     "compute.googleapis.com",
     "storage.googleapis.com",
     "servicenetworking.googleapis.com",
-    "secretmanager.googleapis.com"
+    "secretmanager.googleapis.com",
+    "firebase.googleapis.com",
+    "firestore.googleapis.com",
+    "identitytoolkit.googleapis.com",
+    "firebaseappcheck.googleapis.com"
   ]
 }
 
@@ -70,4 +74,11 @@ module "sql_database" {
   vpc_network             = module.network.network_self_link
 
   depends_on = [module.api_enablement, module.network, module.vpc_connector]
+}
+
+module "firebase" {
+  source             = "./modules/firebase"
+  project_id         = var.GCP_PROJECT_ID
+  display_name       = var.PROJECT_NAME
+  firestore_location = var.GCP_REGION
 }
